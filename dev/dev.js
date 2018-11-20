@@ -7,13 +7,10 @@ let biz = app.createBiz('0.0.1');
 
 biz.addSubModules('test',{
 	foo: args => {
-    app.REDIS.set('test', '111', 'EX', 1000, (err, reply) => {
-      console.log(err, reply);
-    });
-    app.REDIS.pttl('test', function (err, res) {
-      console.log(err, res);
-    });
-		return Promise.reject({errno: -3001})
+    app.REDIS.set('test:a1', '1113', 'EX', 10);
+    app.REDIS.set('test:a2', '1114', 'EX', 10);
+    app.REDIS.set('test:a3', '1115', 'EX', 10);
+		return 1;
 	}
 })
 app.addBizModules(biz);
@@ -22,7 +19,7 @@ const ref = plugin.bind(app)
 // this plugin should run when INIT , but we cant run it in Dev Mode, so We should Run It Manually
 app.runAction('INIT', app)
 
-app.subscribe('#someevent', (topic, data)=>{
+app.subscribe('#redis/message', (topic, data)=>{
 	console.log(topic, data)
 });
 app.run()

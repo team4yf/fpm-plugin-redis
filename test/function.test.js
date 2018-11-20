@@ -24,4 +24,22 @@ describe('Function', function(){
         done(err);
       })
   })
+  it('Function setAsync', function(done){
+    var func = new Func('redis.run');
+    func.invoke({ command: 'setAsync', param: ['ddd', 'aaa'] })
+      .then(function(data){
+        console.log(data)
+        done();
+      }).catch(function(err){
+        done(err);
+      })
+  })
+
+  it('Function publish', async () => {
+    await new Func('redis.run')
+      .invoke({ command: 'subscribe', param: ['test'] });
+
+    await new Func('redis.run')
+      .invoke({ command: 'publish', param: ['test', 'demoaaaa'] })
+  })
 })
