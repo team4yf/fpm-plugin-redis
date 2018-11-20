@@ -1,16 +1,30 @@
 const _ = require('lodash');
+const redis = require('redis');
 
 module.exports = {
   bind: (fpm) => {
+    let client;
     // Run When Server Init
     fpm.registerAction('INIT', () => {
-      const c = fpm.getConfig()
-      console.log('Run Init Actions', c)
+      const c = fpm.getConfig('redis', {
+        host: 'localhost',
+        port: 6379,
+        auth: {
+          password: 'admin123'
+        }
+      });
+
+      client = redis.createClient({
+        host: c.host,
+        port: c.port,
+        password: c.auth.password,
+
+      });
     })
 
     fpm.registerAction('BEFORE_SERVER_START', () => {
-      console.log('Run BEFORE_SERVER_START Actions')
+      fpm.REDIS = client;
     })
-    return {};
+    return client;
   }
 }

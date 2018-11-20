@@ -1,0 +1,9 @@
+version: '3.1' 
+services:
+  redis: 
+    container_name: redis_server
+    restart: always 
+    ports: 
+      - 6379:6379 
+    image: redis 
+    command: redis-server --requirepass admin123

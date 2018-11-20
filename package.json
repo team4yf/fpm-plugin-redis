@@ -7,12 +7,16 @@
     "compile": "./node_modules/.bin/babel -d lib/ src/",
     "prepublishOnly": "npm run compile",
     "dev": "./node_modules/.bin/nodemon dev/dev.js",
-    "test": "./node_modules/.bin/mocha test/*.test.js"
+    "test": "./node_modules/.bin/mocha test/*.test.js",
+    "docker": "docker-compose up --build -d",
+    "docker:down": "docker-compose down",
+    "docker:shell": "docker exec -it redis_server redis-cli -a admin123"
   },
   "author": "yfsoftcom",
   "license": "ISC",
   "dependencies": {
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "redis": "^2.8.0"
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",
