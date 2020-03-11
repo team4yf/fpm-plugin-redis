@@ -1,8 +1,6 @@
-const should = require("chai").should();
-const fpmc = require("yf-fpm-client-js").default;
-const { Func } = fpmc;
-fpmc.init({appkey: '123123', masterKey: '123123', domain: 'http://localhost:9999'});
-
+const { init, Func } = require("fpmc-jssdk");
+const assert = require('assert');
+init({ appkey:'123123', masterKey:'123123', endpoint: 'http://localhost:9999/api' });
 
 describe('Function', function(){
   beforeEach(done => {
@@ -13,26 +11,10 @@ describe('Function', function(){
   afterEach(done => {
     done()
   })
-
-  it('Function A', function(done){
-    var func = new Func('test.foo');
-    func.invoke({})
-      .then(function(data){
-        console.log(data)
-        done();
-      }).catch(function(err){
-        done(err);
-      })
-  })
-  it('Function setAsync', function(done){
+  it('Function setAsync', async () => {
     var func = new Func('redis.run');
-    func.invoke({ command: 'setAsync', param: ['ddd', 'aaa'] })
-      .then(function(data){
-        console.log(data)
-        done();
-      }).catch(function(err){
-        done(err);
-      })
+    let data = await func.invoke({ command: 'setAsync', param: ['ddd', 'aaa'] })      
+    console.log(data)   
   })
 
   it('Function publish', async () => {

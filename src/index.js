@@ -1,6 +1,6 @@
 const _ = require('lodash');
 const redis = require('redis');
-const bluebird = require('bluebird');
+const { promisify } = require("util");
 
 module.exports = {
   bind: (fpm) => {
@@ -25,8 +25,14 @@ module.exports = {
         port: c.port,
         password: c.auth.password,
       });
-      bluebird.promisifyAll(redis.RedisClient.prototype);
-      bluebird.promisifyAll(redis.Multi.prototype);
+      _.forEach(redis.RedisClient.prototype, (func, key) => {
+        if(!_.isFunction(func)) return;
+        redis.RedisClient.prototype[key + 'Async'] = promisify(func);
+      })
+      _.forEach(redis.Multi.prototype, (func, key) => {
+        if(!_.isFunction(func)) return;
+        redis.Multi.prototype[key + 'Async'] = promisify(func);
+      })
       subscriber.on('message', (channel, message) => {
         fpm.publish('#redis/message', { channel, message });
       })
